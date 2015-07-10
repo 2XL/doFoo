@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# http://man.he.net/man8/start-stop-daemon
+# use start-stop-deamon
+
+
+
+name="doFoo"
+script="hw.sh"
+
+# set path for the current process
+export PATH="${PATH:+$PATH:}/usr/sbin:/sbin:."
+ 
+
+function start(){
+    echo -n "Starting daemon: "$name": "
+    start-stop-daemon --start --oknodo --pidfile /var/run/$name.pid --exec `pwd`'/'$script  -- --daemon 
+    echo "."
+}
+
+function stop(){
+    echo -n "Stopping daemon: "$name": "
+    start-stop-daemon --stop --oknodo --pidfile /var/run/$name.pid --retry 5
+    echo "."
+}
+
+function status(){
+    echo "Status"
+}
+
+function restart(){
+    echo "Restart"
+}
+
+
+echo 'MAKE/'$1
+
+case "$1" in
+    start)
+        start
+        ;;
+
+    stop)
+        stop
+        ;;
+    status)
+        status
+        ;;
+    restart)
+	;;
+
+	*)
+        echo $"Usage: $0 {start|stop|restart}"
+        exit 1
+esac
